@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const restrict = require('./middlewares/restrict')
 const restrictJWT = require("./middlewares/restrictJWT");
+const restrictSuperAdmin = require("./middlewares/restrictSuperadmin");
 
 const auth = require("./controllers/authController");
 const passport = require("./lib/passport");
+const { route } = require("express/lib/application");
 
 router.get("/", restrict, (req, res) => {
     console.log(req)
@@ -26,5 +28,6 @@ router.get('/whoami', restrict, auth.whoami)
 
 router.post('/api/v1/auth/login', auth.login)
 router.get('/api/v1/auth/whoami', restrictJWT, auth.whoamiJWT)
+router.post('/api/v1/auth/register', restrictSuperAdmin, auth.regiterJWT);
 
 module.exports = router;

@@ -16,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
 
     static #encrypt = (password) => bcrypt.hashSync(password, 10);
 
-    static register = ({ username, password }) => {
+    static register = ({ username, password, isAdmin }) => {
       const encryptedPassword = this.#encrypt(password);
       /*
         #encrypt dari static method
         encryptedPassword akan sama dengan string 
         hasil enkripsi password dari method #encrypt
       */
-      return this.create({ username, password: encryptedPassword });
+      return this.create({ username, password: encryptedPassword, isAdmin });
     };
 
     checkPassword = (password) => bcrypt.compareSync(password, this.password);
@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       const payload = {
         id: this.id,
         username: this.username,
+        isAdmin: this.isAdmin
       };
       // Rahasia ini nantinya kita pakai untuk memverifikasi apakah token ini benar-benar berasal dari aplikasi kita
       const salt = "binar";
@@ -74,6 +75,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       username: DataTypes.STRING,
       password: DataTypes.STRING,
+      isAdmin: DataTypes.INTEGER
     },
     {
       sequelize,
